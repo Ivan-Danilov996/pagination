@@ -1,24 +1,26 @@
-import logo from './logo.svg';
 import './App.css';
+import { Fragment } from 'react'
+import { useSelector } from 'react-redux'
+import Pagination from './components/Pagination';
+import Filter from './components/Filter';
+import Table from './components/Table';
+
 
 function App() {
+
+  const { products } = useSelector(state => state.productsReducer)
+  const { value } = useSelector(state => state.filterReducer)
+
+  const filterProducts = products.filter(product => product.title.toLowerCase().includes(value.toLowerCase()))
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <Filter value={value}/>
+      <Table filterProducts={filterProducts} value={value} products={products}/>
+      <div className="pagination">
+        <Pagination length={value ? filterProducts.length : products.length} />
+      </div>
+    </Fragment>
   );
 }
 
